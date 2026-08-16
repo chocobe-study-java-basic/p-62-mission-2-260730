@@ -3,11 +3,13 @@ package com.github.chocobe.sbb_mission2.domain.answer.entity;
 import com.github.chocobe.sbb_mission2.domain.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 public class Answer {
 
     @Id
