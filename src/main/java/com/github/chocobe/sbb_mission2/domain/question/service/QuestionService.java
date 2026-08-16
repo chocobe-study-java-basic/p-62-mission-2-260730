@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,6 +30,16 @@ public class QuestionService {
                 .findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Entity not found"));
 
+        return QuestionResponseDto.from(question);
+    }
+
+    public QuestionResponseDto create(String subject, String content) {
+        Question question = new Question();
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setCreateDate(LocalDateTime.now());
+
+        this.questionRepository.save(question);
         return QuestionResponseDto.from(question);
     }
 
