@@ -26,7 +26,7 @@ class SbbMission2ApplicationTests {
 	@Disabled
 	@Test
 	void createMockData() {
-		int numOfQuestions = 100;
+		int numOfQuestions = 300;
 		IntStream.rangeClosed(1, numOfQuestions)
 				.forEach(num -> {
 					Question question = new Question();

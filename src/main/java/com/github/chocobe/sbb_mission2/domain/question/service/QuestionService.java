@@ -6,9 +6,14 @@ import com.github.chocobe.sbb_mission2.domain.question.repository.QuestionReposi
 import com.github.chocobe.sbb_mission2.global.exceptions.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,11 +22,13 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public List<QuestionResponseDto> getList() {
-        List<Question> questionList = this.questionRepository.findAll();
-        return questionList.stream()
-                .map(QuestionResponseDto::from)
-                .toList();
+    public Page<QuestionResponseDto> getList(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Page<Question> questionPage = this.questionRepository.findAll(pageable);
+        return questionPage.map(QuestionResponseDto::from);
     }
 
     @Transactional
