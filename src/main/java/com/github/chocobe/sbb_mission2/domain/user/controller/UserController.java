@@ -19,7 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/signup")
     public String signup(
             @ModelAttribute
             UserCreateForm userCreateForm
@@ -27,7 +27,7 @@ public class UserController {
         return "signup_form";
     }
 
-    @PostMapping
+    @PostMapping("/signup")
     public String signup(
             @ModelAttribute
             @Valid
@@ -64,6 +64,11 @@ public class UserController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login_form";
     }
 
 }

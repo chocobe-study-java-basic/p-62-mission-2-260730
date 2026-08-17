@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.util.AntPathMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +27,15 @@ public class SecurityConfig {
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
                         ))
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/user/login")
+                        .defaultSuccessUrl("/")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/user/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
                 );
 
         return http.build();
