@@ -1,6 +1,7 @@
 package com.github.chocobe.sbb_mission2.domain.question.entity;
 
 import com.github.chocobe.sbb_mission2.domain.answer.entity.Answer;
+import com.github.chocobe.sbb_mission2.domain.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,5 +38,8 @@ public class Question {
             orphanRemoval = true
     )
     private List<Answer> answerList;
+
+    @ManyToOne
+    private SiteUser author;
 
 }

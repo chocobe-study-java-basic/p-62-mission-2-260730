@@ -3,6 +3,8 @@ package com.github.chocobe.sbb_mission2.domain.question.service;
 import com.github.chocobe.sbb_mission2.domain.question.dto.QuestionResponseDto;
 import com.github.chocobe.sbb_mission2.domain.question.entity.Question;
 import com.github.chocobe.sbb_mission2.domain.question.repository.QuestionRepository;
+import com.github.chocobe.sbb_mission2.domain.user.entity.SiteUser;
+import com.github.chocobe.sbb_mission2.domain.user.repository.UserRepository;
 import com.github.chocobe.sbb_mission2.global.exceptions.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.List;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
 
     public Page<QuestionResponseDto> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
@@ -40,10 +43,19 @@ public class QuestionService {
         return QuestionResponseDto.from(question);
     }
 
-    public QuestionResponseDto create(String subject, String content) {
+    public QuestionResponseDto create(
+            String subject,
+            String content,
+            String username
+    ) {
+        SiteUser author = this.userRepository
+                .findByUsername(username)
+                .orElseThrow(DataNotFoundException::new);
+
         Question question = new Question();
         question.setSubject(subject);
         question.setContent(content);
+        question.setAuthor(author);
         question.setCreateDate(LocalDateTime.now());
 
         this.questionRepository.save(question);

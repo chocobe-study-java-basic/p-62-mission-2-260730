@@ -6,10 +6,13 @@ import com.github.chocobe.sbb_mission2.domain.question.dto.QuestionResponseDto;
 import com.github.chocobe.sbb_mission2.domain.question.service.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/answer")
@@ -19,6 +22,7 @@ public class AnswerController {
     private final QuestionService questionService;
     private final AnswerService answerService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{questionId}")
     public String createAnswer(
             Model model,
@@ -26,7 +30,8 @@ public class AnswerController {
             @ModelAttribute
             @Valid
             AnswerFormDto answerFormDto,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Principal principal
     ) {
         if (bindingResult.hasErrors()) {
             QuestionResponseDto question = this.questionService.getQuestion(questionId);
@@ -35,7 +40,11 @@ public class AnswerController {
             return "question_detail";
         }
 
-        this.answerService.create(questionId, answerFormDto.content());
+        this.answerService.create(
+                questionId,
+                answerFormDto.content(),
+                principal.getName()
+        );
         return "redirect:/question/detail/%d".formatted(questionId);
     }
 
