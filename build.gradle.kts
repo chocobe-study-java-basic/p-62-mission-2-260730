@@ -38,6 +38,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+	implementation("org.commonmark:commonmark:0.30.0")
 }
 
 tasks.withType<Test> {

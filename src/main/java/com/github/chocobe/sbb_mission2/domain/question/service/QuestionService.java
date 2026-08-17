@@ -6,6 +6,7 @@ import com.github.chocobe.sbb_mission2.domain.question.repository.QuestionReposi
 import com.github.chocobe.sbb_mission2.domain.user.entity.SiteUser;
 import com.github.chocobe.sbb_mission2.domain.user.repository.UserRepository;
 import com.github.chocobe.sbb_mission2.global.exceptions.DataNotFoundException;
+import com.github.chocobe.sbb_mission2.global.markdown.MarkdownUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +26,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final MarkdownUtil markdownUtil;
 
     public Page<QuestionResponseDto> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
@@ -33,7 +34,10 @@ public class QuestionService {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         Page<Question> questionPage = this.questionRepository.findAll(pageable);
-        return questionPage.map(QuestionResponseDto::from);
+        return questionPage.map(question -> QuestionResponseDto.from(
+                question,
+                this.markdownUtil
+        ));
     }
 
     @Transactional
@@ -42,7 +46,10 @@ public class QuestionService {
                 .findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Entity not found"));
 
-        return QuestionResponseDto.from(question);
+        return QuestionResponseDto.from(
+                question,
+                this.markdownUtil
+        );
     }
 
     public QuestionResponseDto create(
@@ -60,7 +67,10 @@ public class QuestionService {
         question.setAuthor(author);
 
         this.questionRepository.save(question);
-        return QuestionResponseDto.from(question);
+        return QuestionResponseDto.from(
+                question,
+                this.markdownUtil
+        );
     }
 
     public void modify(

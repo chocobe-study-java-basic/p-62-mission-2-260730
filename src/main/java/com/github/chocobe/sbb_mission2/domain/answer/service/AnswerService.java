@@ -8,13 +8,11 @@ import com.github.chocobe.sbb_mission2.domain.question.repository.QuestionReposi
 import com.github.chocobe.sbb_mission2.domain.user.entity.SiteUser;
 import com.github.chocobe.sbb_mission2.domain.user.repository.UserRepository;
 import com.github.chocobe.sbb_mission2.global.exceptions.DataNotFoundException;
+import com.github.chocobe.sbb_mission2.global.markdown.MarkdownUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +21,8 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+
+    private final MarkdownUtil markdownUtil;
 
     public AnswerResponseDto create(Long questionId, String content, String username) {
         Question question = this.questionRepository
@@ -39,7 +39,10 @@ public class AnswerService {
         answer.setAuthor(author);
 
         this.answerRepository.save(answer);
-        return AnswerResponseDto.from(answer);
+        return AnswerResponseDto.from(
+                answer,
+                this.markdownUtil
+        );
     }
 
     public AnswerResponseDto getAnswer(Long id) {
@@ -47,7 +50,10 @@ public class AnswerService {
                 .findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Answer not found"));
 
-        return AnswerResponseDto.from(answer);
+        return AnswerResponseDto.from(
+                answer,
+                this.markdownUtil
+        );
     }
 
     public AnswerResponseDto modify(long id, String content, String username) {
@@ -62,7 +68,10 @@ public class AnswerService {
         answer.setContent(content);
         this.answerRepository.save(answer);
 
-        return AnswerResponseDto.from(answer);
+        return AnswerResponseDto.from(
+                answer,
+                this.markdownUtil
+        );
     }
 
     public AnswerResponseDto delete(Long id, String username) {
@@ -75,7 +84,10 @@ public class AnswerService {
         }
 
         this.answerRepository.delete(answer);
-        return AnswerResponseDto.from(answer);
+        return AnswerResponseDto.from(
+                answer,
+                this.markdownUtil
+        );
     }
 
     public AnswerResponseDto vote(Long id, String username) {
@@ -90,7 +102,10 @@ public class AnswerService {
         answer.getVoter().add(user);
         this.answerRepository.save(answer);
 
-        return AnswerResponseDto.from(answer);
+        return AnswerResponseDto.from(
+                answer,
+                this.markdownUtil
+        );
     }
 
 }
