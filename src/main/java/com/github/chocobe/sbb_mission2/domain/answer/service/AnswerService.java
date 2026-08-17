@@ -24,7 +24,7 @@ public class AnswerService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
 
-    public Answer create(Long questionId, String content, String username) {
+    public AnswerResponseDto create(Long questionId, String content, String username) {
         Question question = this.questionRepository
                 .findById(questionId)
                 .orElseThrow(DataNotFoundException::new);
@@ -39,7 +39,7 @@ public class AnswerService {
         answer.setAuthor(author);
 
         this.answerRepository.save(answer);
-        return answer;
+        return AnswerResponseDto.from(answer);
     }
 
     public AnswerResponseDto getAnswer(Long id) {
