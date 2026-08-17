@@ -15,7 +15,13 @@
         <tr th:each="question, loop : ${paging}">
             <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
             <td>
-                <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+                <a th:href="@{|/question/detail/${question.id}|}"
+                   th:text="${question.subject}"
+                ></a>
+                <span th:if="${question.answerList.size > 0}"
+                      th:text="${question.answerList.size}"
+                      class="text-danger small ms-2"
+                ></span>
             </td>
             <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
