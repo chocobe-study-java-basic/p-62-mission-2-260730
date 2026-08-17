@@ -78,4 +78,19 @@ public class AnswerService {
         return AnswerResponseDto.from(answer);
     }
 
+    public AnswerResponseDto vote(Long id, String username) {
+        Answer answer = this.answerRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Answer not found"));
+
+        SiteUser user =  this.userRepository
+                .findByUsername(username)
+                .orElseThrow(DataNotFoundException::new);
+
+        answer.getVoter().add(user);
+        this.answerRepository.save(answer);
+
+        return AnswerResponseDto.from(answer);
+    }
+
 }

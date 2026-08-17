@@ -88,4 +88,17 @@ public class QuestionService {
         this.questionRepository.delete(question);
     }
 
+    public void vote(Long id, String username) {
+        Question question = this.questionRepository
+                .findById(id)
+                .orElseThrow(DataNotFoundException::new);
+
+        SiteUser user = this.userRepository
+                .findByUsername(username)
+                .orElseThrow(DataNotFoundException::new);
+
+        question.getVoter().add(user);
+        this.questionRepository.save(question);
+    }
+
 }

@@ -7,6 +7,7 @@ import com.github.chocobe.sbb_mission2.domain.user.entity.SiteUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public record QuestionResponseDto(
         Long id,
@@ -15,7 +16,8 @@ public record QuestionResponseDto(
         LocalDateTime createDate,
         LocalDateTime modifyDate,
         List<Answer> answerList,
-        SiteUser author
+        SiteUser author,
+        Set<SiteUser> voter
 ) {
     public static QuestionResponseDto from(Question question) {
         return new QuestionResponseDto(
@@ -25,7 +27,8 @@ public record QuestionResponseDto(
                 question.getCreateDate(),
                 question.getModifyDate(),
                 question.getAnswerList(),
-                question.getAuthor()
+                question.getAuthor(),
+                question.getVoter()
         );
     }
 }
