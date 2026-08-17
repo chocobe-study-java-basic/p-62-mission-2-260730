@@ -31,9 +31,14 @@ public class QuestionController {
                     value = "page",
                     defaultValue = "0"
             )
-            int page
+            int page,
+            @RequestParam(
+                    value = "keyword",
+                    defaultValue = ""
+            )
+            String keyword
     ) {
-        Page<QuestionResponseDto> paging = this.questionService.getList(page);
+        Page<QuestionResponseDto> paging = this.questionService.getList(page, keyword);
         model.addAttribute("paging", paging);
 
         return "question_list";
