@@ -2,6 +2,7 @@ package com.github.chocobe.sbb_mission2;
 
 import com.github.chocobe.sbb_mission2.domain.question.entity.Question;
 import com.github.chocobe.sbb_mission2.domain.question.repository.QuestionRepository;
+import com.github.chocobe.sbb_mission2.domain.question.service.QuestionService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,6 @@ class SbbMission2ApplicationTests {
 					Question question = new Question();
 					question.setSubject("[MOCK] 질문 %d".formatted(num));
 					question.setContent("질문 내용 %d".formatted(num));
-					question.setCreateDate(LocalDateTime.now());
 
 					this.questionRepository.save(question);
 				});

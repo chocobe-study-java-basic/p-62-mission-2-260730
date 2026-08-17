@@ -13,6 +13,7 @@ public record QuestionResponseDto(
         String subject,
         String content,
         LocalDateTime createDate,
+        LocalDateTime modifyDate,
         List<Answer> answerList,
         SiteUser author
 ) {
@@ -22,6 +23,7 @@ public record QuestionResponseDto(
                 question.getSubject(),
                 question.getContent(),
                 question.getCreateDate(),
+                question.getModifyDate(),
                 question.getAnswerList(),
                 question.getAuthor()
         );

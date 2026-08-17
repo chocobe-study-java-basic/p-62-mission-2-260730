@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,10 +58,34 @@ public class QuestionService {
         question.setSubject(subject);
         question.setContent(content);
         question.setAuthor(author);
-        question.setCreateDate(LocalDateTime.now());
 
         this.questionRepository.save(question);
         return QuestionResponseDto.from(question);
+    }
+
+    public void modify(
+            Long id,
+            String subject,
+            String content
+    ) {
+        Question question = this.questionRepository
+                .findById(id)
+                .orElseThrow(DataNotFoundException::new);
+        question.setSubject(subject);
+        question.setContent(content);
+
+        this.questionRepository.save(question);
+    }
+
+    public void delete(Long id, String username) {
+        Question question = this.questionRepository
+                .findById(id)
+                .orElseThrow(DataNotFoundException::new);
+
+        if (!question.getAuthor().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.questionRepository.delete(question);
     }
 
 }
